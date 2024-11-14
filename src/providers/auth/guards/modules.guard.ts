@@ -1,8 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
+
+import { ICommonId } from '@/config';
+
 import { MODULES_KEY } from '../decorators';
-import { IRolesModulesPermissionsMapping } from '@/modules';
 
 @Injectable()
 export class ModulesGuard implements CanActivate {
@@ -24,8 +26,8 @@ export class ModulesGuard implements CanActivate {
 
     const { user } = req;
 
-    return user.roles.rolesModules.some(
-      ({ id }: IRolesModulesPermissionsMapping) => requiredRoles.includes(id),
+    return user.roles.rolesModules.some(({ id }: ICommonId) =>
+      requiredRoles.includes(id),
     );
   }
 }

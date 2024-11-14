@@ -79,11 +79,6 @@ export class UserService {
     name,
   }: CreateUserDto): Promise<IBaseResponse<TUserAttributesNoPassword>> {
     try {
-      await this.userPrismaService.validRoleAndEnterprise({
-        idEnterprise,
-        idRole,
-      });
-
       await this.userPrismaService.validateDuplicate(email);
 
       const { password, ...user } = await this.userPrismaService.create({
@@ -133,11 +128,6 @@ export class UserService {
   }: UpdateUserDto): Promise<IBaseResponse<TUserAttributesNoPassword>> {
     try {
       const where = { id };
-
-      await this.userPrismaService.validRoleAndEnterprise({
-        idEnterprise,
-        idRole,
-      });
 
       await this.userPrismaService.findById(id);
 

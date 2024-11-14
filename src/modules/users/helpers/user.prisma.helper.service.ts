@@ -19,7 +19,6 @@ import {
   unauthorizedExceptionMessages,
 } from '@/config';
 import { removeInactive } from '@/config/common/utils/prisma.util';
-import { EnterprisesPrismaService } from '@/modules/enterprises';
 import { BcryptService } from '@/providers';
 
 import { CreateUserDto } from '../dto';
@@ -40,7 +39,6 @@ export class UserPrismaService {
   constructor(
     private prisma: PrismaService,
     private readonly rolePrismaService: RolesPrismaService,
-    private readonly enterprisesPrismaService: EnterprisesPrismaService,
     private readonly bcryptService: BcryptService,
   ) {}
 
@@ -387,23 +385,6 @@ export class UserPrismaService {
         active: true,
       },
     });
-  }
-
-  /**
-   * The function validRoleAndEnterprise checks if the role and enterprise exist in the database.
-   * @param {IValidRoleAndEnterprise} - The `validRoleAndEnterprise` function takes an object with
-   */
-  async validRoleAndEnterprise({
-    idRole,
-    idEnterprise,
-  }: IValidRoleAndEnterprise): Promise<void> {
-    if (idRole) {
-      await this.rolePrismaService.findById(idRole);
-    }
-
-    if (idEnterprise) {
-      await this.enterprisesPrismaService.validate(idEnterprise);
-    }
   }
 
   /**
