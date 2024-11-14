@@ -1,26 +1,16 @@
 /**
  * @fileoverview The `JwtStrategy` class in TypeScript implements a Passport JWT strategy for user authentication and
  * authorization, validating users based on a common ID and roles. */
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { ICommonId, unauthorizedExceptionMessages } from '@/config';
-import { UserPrismaService } from '@/modules';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    configService: ConfigService,
-    @Inject(forwardRef(() => UserPrismaService))
-    private readonly userPrismaService: UserPrismaService,
-  ) {
+  constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -38,8 +28,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * `userPrismaService` using the `findByIdWithRoles` method. If the user is not found, an
    * `UnauthorizedException` is thrown with the message "invalidCredentials".
    */
-  async validate(payload: ICommonId) {
-    const user = await this.userPrismaService.findByIdWithRoles(payload.id);
+  validate(payload: ICommonId) {
+    const user = {
+      id: payload.id,
+      email: 'test',
+    };
 
     if (!user) {
       throw new UnauthorizedException(

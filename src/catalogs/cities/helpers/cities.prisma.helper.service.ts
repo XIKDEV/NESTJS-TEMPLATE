@@ -1,22 +1,15 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
-import { PrismaService } from '@/config';
-
-import { citiesMessages } from '../messages';
+import { ICatalogsAttributes } from '@/config';
 
 @Injectable()
 export class CitiesPrismaService {
-  constructor(private prisma: PrismaService) {}
-
-  async validateIdCity(id: number): Promise<void> {
-    const city = await this.prisma.cities.findUnique({
-      where: {
-        id,
+  catalog(): Array<ICatalogsAttributes> {
+    return [
+      {
+        value: 1,
+        label: 'Tijuana',
       },
-    });
-
-    if (!city) {
-      throw new ConflictException(citiesMessages.notFound);
-    }
+    ];
   }
 }
